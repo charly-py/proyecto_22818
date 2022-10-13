@@ -1,18 +1,13 @@
+from multiprocessing import context
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from django.urls import reverse
 
 from django.template import loader
 
 # Create your views here.
-
-def index(request):
-    if(request.method=='GET'):
-        titulo = 'Titulo cuando accedo por GET - MODIFICO EL VALOR'
-    else:
-        titulo = f'Titulo cuando accedo por otro metodo {request.method}'
-    parametetros_get = request.GET.get('nombre')
+def index(request):    
     listado_cursos = [
         {
             'nombre':'Fullstack Java',
@@ -30,23 +25,19 @@ def index(request):
             'categoria':'Analisis de datos'
         },
     ]
-    return render(request,'cac/index.html',{'titulo':titulo,'cursos':listado_cursos})
-    # return HttpResponse(f"""
-    #     <h1>{titulo}</h1>
-    #     <p>{parametetros_get}</p>
-    # """)
-
+    return render(request,'cac/publica/index.html',{'cursos':listado_cursos})
+    
 
 def quienes_somos(request):
     #return redirect('saludar_solito')
     #return redirect(reverse('saludar', kwargs={'nombre': 'PepaPig'}))
-    template = loader.get_template('cac/quienes_somos.html')
+    template = loader.get_template('cac/publica/quienes_somos.html')
     contexto = {'titulo':'Codo a Codo - Quienes Somos'}
     return HttpResponse(template.render(contexto,request))
 
 def ver_proyectos(request,anio=2022,mes=1):
     proyectos = []
-    return render(request,'cac/proyectos.html',{'proyectos':proyectos})
+    return render(request,'cac/publica/proyectos.html',{'proyectos':proyectos})
 
 def ver_cursos(request,anio=2022,mes=1):
     listado_cursos = [
@@ -66,79 +57,56 @@ def ver_cursos(request,anio=2022,mes=1):
             'categoria':'Analisis de datos'
         },
     ]
-    return render(request,'cac/cursos.html',{'cursos':listado_cursos})
+    return render(request,'cac/publica/cursos.html',{'cursos':listado_cursos})
+
+def api_proyectos(request,):
+    proyectos = [{
+        'autor': 'Gustavo Villegas',
+        'portada': 'https://agenciadeaprendizaje.bue.edu.ar/wp-content/uploads/2021/12/Gustavo-Martin-Villegas-300x170.png',
+        'url':'https://marvi-artarg.web.app/'
+    },{
+        'autor': 'Enzo Martín Zotti',
+        'portada': 'https://agenciadeaprendizaje.bue.edu.ar/wp-content/uploads/2022/01/Enzo-Martin-Zotti-300x170.jpg',
+        'url':'https://hablaconmigo.com.ar/'
+    },{
+        'autor': 'María Echevarría',
+        'portada': 'https://agenciadeaprendizaje.bue.edu.ar/wp-content/uploads/2022/01/Maria-Echevarria-300x170.jpg',
+        'url':'https://compassionate-colden-089e8a.netlify.app/'
+    },
+    {
+        'autor': 'FEDE LIQUIN',
+        'portada': 'https://agenciadeaprendizaje.bue.edu.ar/wp-content/uploads/2022/01/Maria-Echevarria-300x170.jpg',
+        'url':'https://compassionate-colden-089e8a.netlify.app/'
+    }]
+    response = {'status':'Ok','code':200,'message':'Listado de proyectos','data':proyectos}
+    return JsonResponse(response,safe=False)
+  
+
+def index_administracion(request):
+    variable = 'test variable'
+    return render(request,'cac/administracion/index_administracion.html',{'variable':variable})
+
+def hola_mundo(request):
+    return HttpResponse('Hola Mundo Django 🦄')
+    
+def saludar(request,nombre='Fede'):
+    return HttpResponse(f"""
+        <h1>Hola mundo Django - Un gusto {nombre}</h1>
+    """)
 
 
-## Clase 12
 
-##def index(request):
-##    if(request.method=='GET'):
-##        titulo = 'Titulo cuando accedo por GET'
-##    else:
-##        titulo = f'Titulo cuando accedo por otro metodo {request.method}'
-##    parametros_get = request.GET.get('nombre')
-##    listado_cursos = [
-##        {
-##            'nombre':'Fullstack Java',
-##            'descripcion': 'Curso curso',
-##            'categoria':'Programación'
-##        },
-##        {
-##            'nombre':'Diseño UX/UI',
-##            'descripcion': '🎨',
-##            'categoria':'Diseño'
-##        },
-##        {
-##            'nombre':'Big Data',
-##            'descripcion': 'test test',
-##            'categoria':'Analisis de datos'
-##        },
-##    ]
-##    return render(request,'cac/index.html',{'titulo':titulo,'cursos':listado_cursos})
-##
-##    # return HttpResponse(f"""
-##    #     <h1>{titulo}</h1>
-##    #     <p>{parametros_get}</p>
-##    # """)
-##
-##def quienes_somos(request):
-##    #return redirect('saludar_solito')
-##    #return redirect(reverse('saludar', kwargs={'nombre': 'PepaPig'}))
-##    template = loader.get_template('cac/quienes_somos.html')
-##    contexto = {'titulo':'Codo a Codo - Quienes Somos'}
-##    return HttpResponse(template.render(contexto,request))
-##  
-##def hola_mundo(request):
-##    return HttpResponse('Hola Mundo Django 🦄')
-##    
-##def saludar(request,nombre='Charly'):
-##    return HttpResponse(f"""
-##        <h1>Hola mundo Django - Un gusto {nombre}</h1>
-##    """)
-##  
-##def ver_proyectos(request,anio,mes):
-##    return HttpResponse(f"""
-##        <h1>Proyectos del {mes}/{anio}</h1>
-##        <p>Listado de proyectos</p>
-##    """)
-##  
-##def cursos_detalle(request, nombre_curso):
-##    """"
-##    ir a buscar en mi base datos el curso que tenga ese nombre: slug
-##    """
-##    return HttpResponse(f'{nombre_curso}')
-##    
-##def cursos(request, nombre_categoria):
-##    return HttpResponse(f'{nombre_categoria}')
-##  
-##def ver_proyectos(request,anio,mes=1):
-##    return HttpResponse(f"""
-##        <h1>Proyectos del {mes}/{anio}</h1>
-##        <p>Listado de proyectos</p>
-##    """)
-##  
-##def ver_proyectos_2022_08(request):
-##    return HttpResponse(f"""
-##        <h1>Proyectos del mes de agosto del 2022</h1>
-##        <p>Listado de proyectos</p>
-##    """)
+def ver_proyectos_2022_08(request):
+    return HttpResponse(f"""
+        <h1>Proyectos del mes de agosto del 2022</h1>
+        <p>Listado de proyectos</p>
+    """)
+
+def cursos_detalle(request, nombre_curso):
+    """"
+    ir a buscar en mi base datos el curso que tenga ese nombre: slug
+    """
+    return HttpResponse(f'{nombre_curso}')
+
+def cursos(request, nombre_categoria):
+    return HttpResponse(f'{nombre_categoria}')

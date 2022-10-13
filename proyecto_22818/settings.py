@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!$45_34@a$@*owf#6j2%c0hr-55os@zk!6a_e!c31zhp%rjiv8'
+SECRET_KEY = 'django-insecure-y^135va!2n&5#q#7r1kj*&(s75!m9ouc&@@(ez1#ckkp%dk8ym'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -118,7 +118,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+#Esto es cuando debug esta True, buscar directorios static dentro de las App
 STATIC_URL = '/static/'
+
+#tambien bien debug true, puedo especificar que exista
+#un static dentro del proyecto
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+#esto se genera en producción y es la que deberemos 
+#crear y django ira a buscar ahi 
+#python manage.py collectstatic
+STATIC_ROOT = BASE_DIR / 'static_root'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
